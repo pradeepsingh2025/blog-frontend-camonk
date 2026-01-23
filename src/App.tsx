@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { useBlogs, useBlog } from "./hooks/useBlogs";
 import { BlogList } from "./components/BlogList";
 import { BlogDetail } from "./components/BlogDetail";
@@ -28,27 +28,42 @@ function App() {
     );
   }
 
+  const displayedBlogs = selectedId && blogs
+    ? (() => {
+      const current = blogs.find((b) => b.id === selectedId);
+      if (!current) return blogs;
+      const similar = blogs.filter(
+        (b) =>
+          b.id !== selectedId &&
+          b.category.some((cat) => current.category.includes(cat))
+      );
+      return [current, ...similar.slice(0, 4)];
+    })()
+    : blogs || [];
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
-      <header className="mb-8">
-        <h1
-          className={cn(
-            "text-3xl font-bold tracking-tight transition-all",
-            selectedId ? "text-primary" : "text-foreground"
-          )}
-        >
-          My Tech Blog
-        </h1>
-      </header>
+      {!selectedId ? (
+        <header className="mb-8 max-w-[1150px] mx-auto">
+          <h1
+            className={cn(
+              "text-3xl font-bold tracking-tight transition-all",
+              selectedId ? "text-primary" : "text-foreground"
+            )}
+          >
+            My Tech Blog
+          </h1>
+        </header>
+      ) : null}
 
-      <motion.div layout className="flex h-[calc(100vh-140px)] gap-6">
+      <motion.div layout className="flex h-screen gap-2">
         {/* Left Side (List/Grid) */}
         <BlogList
-          blogs={blogs || []}
+          blogs={displayedBlogs}
           selectedId={selectedId}
           onSelect={setSelectedId}
           className={cn(
-            selectedId ? "flex-none" : "w-full",
+            selectedId ? "flex-none" : "w-full max-w-[1200px]",
             // Responsive: hidden on mobile when detail is open
             selectedId && "hidden md:flex"
           )}
@@ -63,7 +78,12 @@ function App() {
               initial={{ opacity: 0, width: 0 }}
               animate={{ opacity: 1, width: "auto" }}
               exit={{ opacity: 0, width: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{
+                type: "spring",
+                stiffness: 180,
+                damping: 30
+              }}
+
             >
               {blogLoading ? (
                 <div className="flex h-full items-center justify-center">
