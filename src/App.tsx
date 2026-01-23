@@ -4,7 +4,8 @@ import { useBlogs, useBlog } from "./hooks/useBlogs";
 import { BlogList } from "./components/BlogList";
 import { BlogDetail } from "./components/BlogDetail";
 import { CreateBlogModal } from "./components/CreateBlogModal";
-import { Loader2 } from "lucide-react";
+import { BlogListSkeleton } from "./components/skeletons/BlogListSkeleton";
+import { BlogDetailSkeleton } from "./components/skeletons/BlogDetailSkeleton";
 import { cn } from "./lib/utils";
 import { Button } from "./components/ui/button";
 
@@ -17,8 +18,17 @@ function App() {
 
   if (blogsLoading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-background p-4 md:p-8">
+        <header className="mb-8 max-w-[1150px] mx-auto flex items-center justify-between">
+          <h1 className="text-3xl font-bold tracking-tight transition-all text-foreground">
+            My Tech Blog
+          </h1>
+        </header>
+        <div className="flex h-screen gap-2 justify-center">
+          <div className="w-full max-w-[1200px]">
+            <BlogListSkeleton isSidebar={false} />
+          </div>
+        </div>
       </div>
     );
   }
@@ -45,7 +55,7 @@ function App() {
     : blogs || [];
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
+    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       {!selectedId ? (
         <header className="mb-8 max-w-[1150px] mx-auto flex items-center justify-between">
           <h1
@@ -96,9 +106,7 @@ function App() {
 
             >
               {blogLoading ? (
-                <div className="flex h-full items-center justify-center">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                </div>
+                <BlogDetailSkeleton onClose={() => setSelectedId(null)} />
               ) : selectedBlog ? (
                 <BlogDetail
                   blog={selectedBlog}
