@@ -22,7 +22,7 @@ export function BlogList({
         <motion.div
             layout
             className={cn(
-                "grid gap-2 md:gap-4 max-w-[1200px] mx-auto",
+                "grid gap-2 md:gap-4",
                 isSidebar
                     ? "grid-cols-1 overflow-x-auto overflow-y-hidden md:flex md:w-[350px] md:flex-col md:overflow-y-auto md:overflow-x-hidden"
                     : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",

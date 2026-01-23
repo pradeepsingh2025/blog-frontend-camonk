@@ -16,6 +16,11 @@ function App() {
   const { data: blogs, isLoading: blogsLoading, error } = useBlogs();
   const { data: selectedBlog, isLoading: blogLoading } = useBlog(selectedId);
 
+  const handleSelectBlog = (id: string) => {
+    setSelectedId(id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   if (blogsLoading) {
     return (
       <div className="min-h-screen bg-background p-4 md:p-8">
@@ -25,7 +30,7 @@ function App() {
           </h1>
         </header>
         <div className="flex h-screen gap-2 justify-center">
-          <div className="w-full max-w-[1200px]">
+          <div className="w-full">
             <BlogListSkeleton isSidebar={false} />
           </div>
         </div>
@@ -57,7 +62,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       {!selectedId ? (
-        <header className="mb-8 max-w-[1150px] mx-auto flex items-center justify-between">
+        <header className="mb-8 max-w-[1150px] bg-background border-b px-10 py-2 rounded-3xl mx-auto flex items-center justify-between">
           <h1
             className={cn(
               "text-3xl font-bold tracking-tight transition-all",
@@ -81,9 +86,9 @@ function App() {
         <BlogList
           blogs={displayedBlogs}
           selectedId={selectedId}
-          onSelect={setSelectedId}
+          onSelect={handleSelectBlog}
           className={cn(
-            selectedId ? "flex-none" : "w-full max-w-[1200px]",
+            selectedId ? "flex-none" : "w-full ",
             // Responsive: hidden on mobile when detail is open
             selectedId && "hidden md:flex"
           )}
