@@ -3,12 +3,15 @@ import { AnimatePresence, motion } from "motion/react";
 import { useBlogs, useBlog } from "./hooks/useBlogs";
 import { BlogList } from "./components/BlogList";
 import { BlogDetail } from "./components/BlogDetail";
+import { CreateBlogModal } from "./components/CreateBlogModal";
 import { Loader2 } from "lucide-react";
 import { cn } from "./lib/utils";
+import { Button } from "./components/ui/button";
 
 
 function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
   const { data: blogs, isLoading: blogsLoading, error } = useBlogs();
   const { data: selectedBlog, isLoading: blogLoading } = useBlog(selectedId);
 
@@ -44,7 +47,7 @@ function App() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       {!selectedId ? (
-        <header className="mb-8 max-w-[1150px] mx-auto">
+        <header className="mb-8 max-w-[1150px] mx-auto flex items-center justify-between">
           <h1
             className={cn(
               "text-3xl font-bold tracking-tight transition-all",
@@ -53,6 +56,13 @@ function App() {
           >
             My Tech Blog
           </h1>
+          <Button
+            variant="outline"
+            size="default"
+            onClick={() => setIsCreating(true)}
+          >
+            Create Post
+          </Button>
         </header>
       ) : null}
 
@@ -100,6 +110,7 @@ function App() {
         </AnimatePresence>
 
       </motion.div >
+      <CreateBlogModal isOpen={isCreating} onClose={() => setIsCreating(false)} />
     </div >
   );
 }

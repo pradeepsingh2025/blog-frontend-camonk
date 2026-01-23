@@ -22,3 +22,12 @@ export const fetchBlogById = async (id: string): Promise<Blog> => {
     const response = await axios.get(`${API_URL}/blogs/${id}`);
     return response.data;
 };
+
+export const createBlog = async (blog: Omit<Blog, "id" | "date">): Promise<Blog> => {
+    const response = await axios.post(`${API_URL}/blogs`, {
+        ...blog,
+        id: crypto.randomUUID(), // Ensure ID is generated
+        date: new Date().toISOString() // Ensure date is set
+    });
+    return response.data;
+};

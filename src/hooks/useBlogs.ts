@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchBlogs, fetchBlogById } from "../api/blogApi";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchBlogs, fetchBlogById, createBlog } from "../api/blogApi";
 
 export const useBlogs = () => {
     return useQuery({
@@ -13,5 +13,15 @@ export const useBlog = (id: string | null) => {
         queryKey: ["blog", id],
         queryFn: () => fetchBlogById(id!),
         enabled: !!id,
+    });
+};
+
+export const useCreateBlog = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: createBlog,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["blogs"] });
+        },
     });
 };
